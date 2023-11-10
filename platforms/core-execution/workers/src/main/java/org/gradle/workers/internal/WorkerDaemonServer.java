@@ -21,6 +21,7 @@ import org.gradle.api.internal.CollectionCallbackActionDecorator;
 import org.gradle.api.internal.DefaultClassPathProvider;
 import org.gradle.api.internal.DefaultClassPathRegistry;
 import org.gradle.api.internal.MutationGuards;
+import org.gradle.api.internal.StartParameterInternal;
 import org.gradle.api.internal.classpath.DefaultModuleRegistry;
 import org.gradle.api.internal.classpath.ModuleRegistry;
 import org.gradle.api.internal.collections.DefaultDomainObjectCollectionFactory;
@@ -84,7 +85,7 @@ public class WorkerDaemonServer implements RequestHandler<TransportableActionExe
             .parent(parent)
             .provider(new WorkerSharedGlobalScopeServices(ClassPath.EMPTY))
             .provider(new WorkerDaemonServices())
-            .provider(new WorkerSharedBuildSessionScopeServices())
+            .provider(new WorkerSharedBuildSessionScopeServices(new StartParameterInternal()))
             .build();
     }
 

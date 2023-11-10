@@ -34,7 +34,6 @@ import org.gradle.api.internal.tasks.userinput.UserInputHandler;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.cache.UnscopedCacheBuilderFactory;
 import org.gradle.cache.internal.BuildOperationCleanupActionDecorator;
-import org.gradle.cache.internal.BuildScopeCacheDir;
 import org.gradle.cache.internal.CleanupActionDecorator;
 import org.gradle.cache.internal.InMemoryCacheDecoratorFactory;
 import org.gradle.cache.internal.scopes.DefaultBuildTreeScopedCacheBuilderFactory;
@@ -47,21 +46,16 @@ import org.gradle.initialization.BuildCancellationToken;
 import org.gradle.initialization.BuildClientMetaData;
 import org.gradle.initialization.BuildEventConsumer;
 import org.gradle.initialization.BuildRequestMetaData;
-import org.gradle.initialization.GradleUserHomeDirProvider;
 import org.gradle.initialization.layout.BuildLocations;
-import org.gradle.initialization.layout.BuildLayoutConfiguration;
-import org.gradle.initialization.layout.BuildLayoutFactory;
 import org.gradle.initialization.layout.ProjectCacheDir;
 import org.gradle.internal.build.BuildLayoutValidator;
 import org.gradle.internal.buildevents.BuildStartedTime;
 import org.gradle.internal.classpath.ClassPath;
 import org.gradle.internal.event.DefaultListenerManager;
 import org.gradle.internal.event.ListenerManager;
-import org.gradle.internal.file.Deleter;
 import org.gradle.internal.hash.ChecksumService;
 import org.gradle.internal.hash.DefaultChecksumService;
 import org.gradle.internal.jvm.JavaModuleDetector;
-import org.gradle.internal.logging.progress.ProgressLoggerFactory;
 import org.gradle.internal.logging.sink.OutputEventListenerManager;
 import org.gradle.internal.model.CalculatedValueContainerFactory;
 import org.gradle.internal.model.StateTransitionControllerFactory;
@@ -89,8 +83,6 @@ import java.util.List;
  * Contains the services for a single build session, which could be a single build or multiple builds when in continuous mode.
  */
 public class BuildSessionScopeServices extends WorkerSharedBuildSessionScopeServices {
-
-    private final StartParameterInternal startParameter;
     private final BuildRequestMetaData buildRequestMetaData;
     private final ClassPath injectedPluginClassPath;
     private final BuildCancellationToken buildCancellationToken;
@@ -98,7 +90,7 @@ public class BuildSessionScopeServices extends WorkerSharedBuildSessionScopeServ
     private final BuildEventConsumer buildEventConsumer;
 
     public BuildSessionScopeServices(StartParameterInternal startParameter, BuildRequestMetaData buildRequestMetaData, ClassPath injectedPluginClassPath, BuildCancellationToken buildCancellationToken, BuildClientMetaData buildClientMetaData, BuildEventConsumer buildEventConsumer) {
-        this.startParameter = startParameter;
+        super(startParameter);
         this.buildRequestMetaData = buildRequestMetaData;
         this.injectedPluginClassPath = injectedPluginClassPath;
         this.buildCancellationToken = buildCancellationToken;
@@ -141,23 +133,8 @@ public class BuildSessionScopeServices extends WorkerSharedBuildSessionScopeServ
         return new BuildOperationCrossProjectConfigurator(buildOperationExecutor);
     }
 
-    BuildLocations createBuildLocations(BuildLayoutFactory buildLayoutFactory, StartParameter startParameter) {
-        return buildLayoutFactory.getLayoutFor(new BuildLayoutConfiguration(startParameter));
-    }
-
     FileResolver createFileResolver(FileLookup fileLookup, BuildLocations buildLocations) {
         return fileLookup.getFileResolver(buildLocations.getRootDirectory());
-    }
-
-    ProjectCacheDir createProjectCacheDir(
-        GradleUserHomeDirProvider userHomeDirProvider,
-        BuildLocations buildLocations,
-        Deleter deleter,
-        ProgressLoggerFactory progressLoggerFactory,
-        StartParameter startParameter
-    ) {
-        BuildScopeCacheDir cacheDir = new BuildScopeCacheDir(userHomeDirProvider, buildLocations, startParameter);
-        return new ProjectCacheDir(cacheDir.getDir(), progressLoggerFactory, deleter);
     }
 
     BuildTreeScopedCacheBuilderFactory createBuildTreeScopedCache(ProjectCacheDir projectCacheDir, UnscopedCacheBuilderFactory unscopedCacheBuilderFactory) {

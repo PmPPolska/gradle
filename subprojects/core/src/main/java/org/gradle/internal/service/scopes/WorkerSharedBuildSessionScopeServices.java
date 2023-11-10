@@ -16,7 +16,16 @@
 
 package org.gradle.internal.service.scopes;
 
+import org.gradle.api.internal.StartParameterInternal;
+import org.gradle.cache.internal.BuildScopeCacheDir;
+import org.gradle.initialization.GradleUserHomeDirProvider;
+import org.gradle.initialization.layout.BuildLayoutConfiguration;
+import org.gradle.initialization.layout.BuildLayoutFactory;
+import org.gradle.initialization.layout.BuildLocations;
+import org.gradle.initialization.layout.ProjectCacheDir;
+import org.gradle.internal.file.Deleter;
 import org.gradle.internal.hash.ClassLoaderHierarchyHasher;
+import org.gradle.internal.logging.progress.ProgressLoggerFactory;
 import org.gradle.internal.snapshot.ValueSnapshotter;
 import org.gradle.internal.snapshot.impl.DefaultValueSnapshotter;
 import org.gradle.internal.snapshot.impl.ValueSnapshotterSerializerRegistry;
@@ -24,6 +33,11 @@ import org.gradle.internal.snapshot.impl.ValueSnapshotterSerializerRegistry;
 import java.util.List;
 
 public class WorkerSharedBuildSessionScopeServices {
+    protected final StartParameterInternal startParameter;
+
+    public WorkerSharedBuildSessionScopeServices(StartParameterInternal startParameter) {
+        this.startParameter = startParameter;
+    }
 
     ValueSnapshotter createValueSnapshotter(
         List<ValueSnapshotterSerializerRegistry> valueSnapshotterSerializerRegistryList,
@@ -33,5 +47,23 @@ public class WorkerSharedBuildSessionScopeServices {
             valueSnapshotterSerializerRegistryList,
             classLoaderHierarchyHasher
         );
+    }
+
+    ProjectCacheDir createProjectCacheDir(
+        GradleUserHomeDirProvider userHomeDirProvider,
+        BuildLocations buildLocations,
+        Deleter deleter,
+        ProgressLoggerFactory progressLoggerFactory
+    ) {
+        BuildScopeCacheDir cacheDir = new BuildScopeCacheDir(userHomeDirProvider, buildLocations, startParameter);
+        return new ProjectCacheDir(cacheDir.getDir(), progressLoggerFactory, deleter);
+    }
+
+    BuildLocations createBuildLocations(BuildLayoutFactory buildLayoutFactory) {
+        return buildLayoutFactory.getLayoutFor(new BuildLayoutConfiguration(startParameter));
+    }
+
+    BuildLayoutFactory createBuildLayoutFactory() {
+        return new BuildLayoutFactory();
     }
 }
