@@ -78,6 +78,11 @@ public abstract class Try<T> {
     public abstract T getOrMapFailure(Function<Throwable, T> f);
 
     /**
+     * Returns the result if the represented operation was successful, or {@link Optional#empty()} if it failed.
+     */
+    public abstract Optional<T> getIfSuccessful();
+
+    /**
      * Returns the failure for a failed result, or {@link Optional#empty()} otherwise.
      */
     public abstract Optional<Throwable> getFailure();
@@ -147,6 +152,11 @@ public abstract class Try<T> {
         @Override
         public T getOrMapFailure(Function<Throwable, T> f) {
             return value;
+        }
+
+        @Override
+        public Optional<T> getIfSuccessful() {
+            return Optional.of(value);
         }
 
         @Override
@@ -243,6 +253,11 @@ public abstract class Try<T> {
         @Override
         public T getOrMapFailure(Function<Throwable, T> f) {
             return f.apply(failure);
+        }
+
+        @Override
+        public Optional<T> getIfSuccessful() {
+            return Optional.empty();
         }
 
         @Override
