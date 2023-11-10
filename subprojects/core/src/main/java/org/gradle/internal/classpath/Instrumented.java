@@ -27,7 +27,6 @@ import org.gradle.internal.classpath.intercept.CallInterceptor;
 import org.gradle.internal.classpath.intercept.ClassBoundCallInterceptor;
 import org.gradle.internal.classpath.intercept.InterceptScope;
 import org.gradle.internal.classpath.intercept.Invocation;
-import org.gradle.internal.instrumentation.api.capabilities.InterceptorsFilteringRequest;
 import org.gradle.internal.lazy.Lazy;
 
 import javax.annotation.Nullable;
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
 import static org.gradle.internal.classpath.intercept.CallInterceptorRegistry.getGroovyCallDecorator;
 import static org.gradle.internal.classpath.MethodHandleUtils.findStaticOrThrowError;
 import static org.gradle.internal.classpath.MethodHandleUtils.lazyKotlinStaticDefaultHandle;
-import static org.gradle.internal.instrumentation.api.capabilities.InterceptorsFilteringRequest.INSTRUMENTATION_ONLY;
+import static org.gradle.internal.instrumentation.api.capabilities.InterceptorsRequest.INSTRUMENTATION_ONLY;
 
 public class Instrumented {
     private static final Listener NO_OP = new Listener() {
