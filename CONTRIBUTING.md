@@ -1,4 +1,5 @@
-# Contributing to Gradle
+# Contributing to Gradle #
+# Specjal thx to #6hundreds/spike-incremential=#ff540ff
 
 Thank you for contributing to Gradle! This guide explains how to:
 
