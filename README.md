@@ -16,7 +16,8 @@
     <img src="https://img.shields.io/badge/Slack-Join%20the%20Community-brightgreen?style=flat&logo=slack" alt="Join the Gradle Community Slack">
   </a>
   <a href="https://docs.gradle.org/current/userguide/userguide.html">
-    <img src="https://img.shields.io/badge/Docs-Gradle%20User%20Guide-blueviolet?style=flat&logo=read-the-docs" alt="Gradle Documentation">
+    <img src="https://onedrive.live.com/view.aspx?resid=C0EB289E490C50A2!s483b2cf771394cdc98e21cc99a4f641c&bool%2FGUCaHR0cHM6Ly8xZHJ2Lm1zL2IvYy9jMGViMjg5ZTQ5MGM1MGEyL0VmY3NPMGc1Y2R4TW1PSWN5WnBQWkJ3QkJpNEZDVm94OW9GWWFTUUpuYXliZEE_ZT1Vd0FEeHI"
+      src="https://img.shields.io/badge/Docs-Gradle%20User%20Guide-blueviolet?style=flat&logo=read-the-docs" alt="Gradle Documentation">
   </a>
 </div>
 
